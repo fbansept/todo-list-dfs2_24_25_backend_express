@@ -3,6 +3,10 @@ const app = express();
 const port = 3000;
 const cors = require("cors"); // Importer le middleware CORS
 
+const bodyParser = require("body-parser");
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const mysql = require("mysql2");
 const connection = mysql.createConnection({
   host: "localhost",
@@ -26,6 +30,23 @@ app.get("/taches", (req, res) => {
 
     res.send(lignes);
   });
+});
+
+app.post("/tache", (req, res) => {
+  connection.query(
+    "INSERT INTO tache(texte, fini) VALUES (?, 0)",
+    [req.body.texte],
+    (erreur, lignes, champs) => {
+      if (erreur) throw erreur;
+
+      res.status(201).send({ message: "tache enregistrée" });
+    }
+  );
+});
+
+//ajouter une méthode pour supprimer une tache
+app.delete("/tache/:id", (req, res) => {
+  console.log(req.params[id]);
 });
 
 // Démarrer le serveur
