@@ -46,7 +46,18 @@ app.post("/tache", (req, res) => {
 
 //ajouter une méthode pour supprimer une tache
 app.delete("/tache/:id", (req, res) => {
-  console.log(req.params[id]);
+  
+  const idTache = req.params.id;
+
+  connection.query(
+    "DELETE FROM tache WHERE id = ?",
+    [idTache],
+    (erreur, lignes, champs) => {
+      if (erreur) throw erreur;
+
+      res.status(200).send({ message: "tache supprimée" });
+    }
+  );
 });
 
 // Démarrer le serveur
